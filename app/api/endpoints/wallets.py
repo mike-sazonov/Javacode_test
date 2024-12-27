@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
 
-wallet_router = APIRouter(
-    prefix="/wallet"
+wallets_router = APIRouter(
+    prefix="/wallets"
 )
 
-@wallet_router.get("/")
+@wallets_router.get("/")
 async def hello_world():
     return {"message": "Hello world!"}
