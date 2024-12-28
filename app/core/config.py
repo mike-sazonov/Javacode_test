@@ -7,7 +7,6 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
-    DB_NAME_TEST: str
 
     @property
     def ASYNC_DATABASE_URl(self):
