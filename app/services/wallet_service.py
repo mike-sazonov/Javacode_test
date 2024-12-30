@@ -1,3 +1,5 @@
+from fastapi.exceptions import HTTPException
+
 from app.api.schemas.wallet import NewWallet, WalletFromDB, Operation
 from app.utils.unitofwork import IUnitOfWork
 
@@ -24,7 +26,7 @@ class WalletService:
             try:
                 return wallet_from_db.balance
             except AttributeError:
-                return {"message": "Кошелька не существует"}
+                raise HTTPException(status_code=404, detail="Wallet not found")
 
     async def wallet_operation(self, wallet_uuid: str, params: Operation):
         new_values = dict()
@@ -35,17 +37,17 @@ class WalletService:
                 new_values['balance'] = balance + params.amount
                 await self.uow.wallet.update_one(new_values, id=wallet_uuid)
                 await self.uow.commit()
-                message = f"Средства успешно зачислены, баланс {new_values['balance']}"
+                message = f"Funds successfully credited, balance {new_values['balance']}"
 
             elif params.operationType == 'WITHDRAW':
                 if balance >= params.amount:
                     new_values['balance'] = balance - params.amount
                     await self.uow.wallet.update_one(new_values, id=wallet_uuid)
                     await self.uow.commit()
-                    message = f"Средства успешно списаны, баланс {new_values['balance']}"
+                    message = f"Funds successfully written off, balance {new_values['balance']}"
 
                 else:
-                    message = "Недостаточно средств для списания"
+                    message = "Insufficient funds to write off"
 
 
             return {"message": message}
