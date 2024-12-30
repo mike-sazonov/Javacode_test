@@ -21,25 +21,29 @@ class WalletService:
         async with self.uow:
             wallet_from_db = await self.uow.wallet.find_one(id=wallet_uuid)
 
-            return wallet_from_db.balance
+            try:
+                return wallet_from_db.balance
+            except AttributeError:
+                return {"message": "Кошелька не существует"}
 
-    async def wallet_operation(self, data: str, params: Operation):
+    async def wallet_operation(self, wallet_uuid: str, params: Operation):
         new_values = dict()
         async with self.uow:
-            balance = await self.get_balance(data)
+            balance = await self.get_balance(wallet_uuid)
+
             if params.operationType == 'DEPOSIT':
                 new_values['balance'] = balance + params.amount
-                await self.uow.wallet.update_one(new_values, id=data)
+                await self.uow.wallet.update_one(new_values, id=wallet_uuid)
                 await self.uow.commit()
-
                 message = f"Средства успешно зачислены, баланс {new_values['balance']}"
+
             elif params.operationType == 'WITHDRAW':
                 if balance >= params.amount:
                     new_values['balance'] = balance - params.amount
-                    await self.uow.wallet.update_one(new_values, id=data)
+                    await self.uow.wallet.update_one(new_values, id=wallet_uuid)
                     await self.uow.commit()
-
                     message = f"Средства успешно списаны, баланс {new_values['balance']}"
+
                 else:
                     message = "Недостаточно средств для списания"
 
