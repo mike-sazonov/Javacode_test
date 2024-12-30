@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class NewWallet(BaseModel):
@@ -8,3 +8,7 @@ class WalletFromDB(NewWallet):
     model_config = ConfigDict(from_attributes=True)
 
     id: str
+
+class Operation(BaseModel):
+    operationType: str
+    amount: int
