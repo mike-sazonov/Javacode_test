@@ -13,7 +13,7 @@ async def get_wallet_service(uow: IUnitOfWork = Depends(UnitOfWork)):
 
 @wallets_router.get("/{wallet_uuid}")
 async def get_balance(wallet_uuid: str, wallet_service: WalletService = Depends(get_wallet_service)):
-    balance = wallet_service.get_balance(wallet_uuid)
+    balance = await wallet_service.get_balance(wallet_uuid)
     return {"message": f"Balance {balance}"}
 
 

@@ -7,10 +7,15 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
+    DB_NAME_TEST: str
 
     @property
     def ASYNC_DATABASE_URl(self):
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
+    @property
+    def TEST_ASYNC_DATABASE_URl(self):
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME_TEST}"
 
     model_config = SettingsConfigDict(env_file=".env")
 
