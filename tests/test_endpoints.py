@@ -5,9 +5,9 @@ from fastapi.testclient import TestClient
 from app.services.wallet_service import WalletService
 from app.api.endpoints.wallets import get_wallet_service
 from app.utils.unitofwork import IUnitOfWork, UnitOfWorkTest
+from app.db.database import Base
 from main import app
 from .db_test import drop_test_db, engine_test
-from app.db.database import Base
 
 
 client = TestClient(app)
