@@ -4,10 +4,18 @@ from pydantic import BaseModel, ConfigDict, model_validator
 class NewWallet(BaseModel):
     balance: int
 
+    @model_validator(mode='after')
+    def balance_validator(self):
+        if self.balance < 0:
+            raise ValueError("Negative value")
+        return self
+
+
 class WalletFromDB(NewWallet):
     model_config = ConfigDict(from_attributes=True)
 
     id: str
+
 
 class Operation(BaseModel):
     operationType: str = 'DEPOSIT'

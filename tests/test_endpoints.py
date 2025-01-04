@@ -5,9 +5,8 @@ from fastapi.testclient import TestClient
 from app.services.wallet_service import WalletService
 from app.api.endpoints.wallets import get_wallet_service
 from app.utils.unitofwork import IUnitOfWork, UnitOfWorkTest
-from app.db.database import Base
 from main import app
-from .db_test import drop_test_db, engine_test
+from .db_test import drop_test_db, create_test_db
 
 
 client = TestClient(app)
@@ -25,8 +24,7 @@ class TestDB:
 
     @pytest.mark.asyncio
     async def test_start(self):
-        async with engine_test.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
+        await create_test_db()
 
 
     # create new wallet
