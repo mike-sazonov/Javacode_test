@@ -22,7 +22,6 @@ GET api/v1/wallets/{WALLET_UUID}
 * PostgreSQL
 * Alembic
 * Pytest
-* JWT
 * docker-compose
 
 ### Запуск проекта локально
